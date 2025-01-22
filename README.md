@@ -1,36 +1,46 @@
-# {{Name}}
+# Getting Started with Create React App
 
-<!--
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Requirements
-Add any external project dependencies such as node.js version etc here
+## Available Scripts
 
-## Installation / Usage
+In the project directory, you can run:
 
-Add clear instructions on how to use the project here
+### `npm start`
 
-## Development
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-Add clear instructions on how to start development of the project here
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
--->
+### `npm test`
 
-### Contributing
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-See [CONTRIBUTING](CONTRIBUTING.md)
+### `npm run build`
 
-# Support
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-Join our [community on Slack](http://slack.streamingtech.se) where you can post any questions regarding any of our open source projects. Eyevinn's consulting business can also offer you:
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-- Further development of this component
-- Customization and integration of this component into your platform
-- Support and maintenance agreement
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-Contact [sales@eyevinn.se](mailto:sales@eyevinn.se) if you are interested.
+### `npm run eject`
 
-# About Eyevinn Technology
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-[Eyevinn Technology](https://www.eyevinntechnology.se) is an independent consultant firm specialized in video and streaming. Independent in a way that we are not commercially tied to any platform or technology vendor. As our way to innovate and push the industry forward we develop proof-of-concepts and tools. The things we learn and the code we write we share with the industry in [blogs](https://dev.to/video) and by open sourcing the code we have written.
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Want to know more about Eyevinn and how it is to work here. Contact us at work@eyevinn.se!
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
