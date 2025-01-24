@@ -2,7 +2,7 @@ import { LOG_LEVEL } from './environment';
 
 /** Signature of a logging function */
 export interface LogFn {
-  (message?: any, ...optionalParams: any[]): void;
+  (message?: string, ...optionalParams: unknown[]): void;
 }
 
 /** Basic logger interface */
@@ -15,7 +15,7 @@ export interface Logger {
 /** Log levels */
 export type LogLevel = 'log' | 'warn' | 'error';
 
-const NO_OP: LogFn = (message?: any, ...optionalParams: any[]) => {};
+const NO_OP: LogFn = () => {};
 
 /** Logger which outputs to the browser console */
 export class ConsoleLogger implements Logger {
