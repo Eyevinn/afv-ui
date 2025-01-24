@@ -1,7 +1,6 @@
 import './index.css';
 // import { AddAgent } from './components/add-agent/AddAgent';
 // import { Button } from './components/button/Button';
-import { logger } from './hooks/error/logger';
 
 function App() {
   return (
