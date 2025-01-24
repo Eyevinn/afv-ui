@@ -37,7 +37,7 @@ export const CreateAgent = {
 
 export const DeleteAgent = {
   // TODO: Update the parameters to the correct ones
-  createWsConnection: async ({ id }: { id: string }) =>
+  createWsConnection: async () =>
     handleFetchRequest<string>(
       // TODO: Update the URL-endpoint to the correct one
       fetch(`${API_URL}something/`, {
