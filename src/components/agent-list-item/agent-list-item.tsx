@@ -65,6 +65,7 @@ export const AgentListItem = ({
         isOpen={isModalOpen}
         title="Delete Agent"
         message={`Are you sure you want to remove the ${agent.name} agent?`}
+        confirmText="Yes, delete agent"
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => handleDeleteAgent(agent.id)}
       />

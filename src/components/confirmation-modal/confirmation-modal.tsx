@@ -4,6 +4,7 @@ type TConfirmationModalProps = {
   isOpen: boolean;
   title: string;
   message: string;
+  confirmText: string;
   onClose: () => void;
   onConfirm: () => void;
 };
@@ -12,6 +13,7 @@ export const ConfirmationModal = ({
   isOpen,
   title,
   message,
+  confirmText,
   onClose,
   onConfirm
 }: TConfirmationModalProps) => {
@@ -26,7 +28,7 @@ export const ConfirmationModal = ({
         <p className="text-white mt-4">{message}</p>
         <div className="mt-8 flex justify-end gap-4">
           <CancelButton onClick={onClose} children="Cancel" />
-          <DangerButton onClick={onConfirm} children="Yes, delete agent" />
+          <DangerButton onClick={onConfirm} children={confirmText} />
         </div>
       </div>
     </div>
