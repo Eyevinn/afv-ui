@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CreateAgent } from '../../api/api';
 import { CancelButton, PrimaryButton } from '../buttons/Buttons';
 import { Input } from '../input/Input';
+import { useCreateAgent } from '../../hooks/use-create-agent';
 
 type AddAgentModalProps = {
   isOpen: boolean;
@@ -14,11 +15,11 @@ export const AddAgentModal = ({
   onClose,
   onAgentUpdate
 }: AddAgentModalProps) => {
-  const [url, setUrl] = useState<string>('');
-  const [name, setName] = useState<string>('');
   const [nameError, setNameError] = useState<string | null>(null);
-  const [urlError, setUrlError] = useState<string | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const { url, name, urlError, setUrl, setName, createAgent } =
+    useCreateAgent();
 
   const setInputRef = (index: number, el: HTMLInputElement | null) => {
     inputRefs.current[index] = el;
@@ -36,50 +37,31 @@ export const AddAgentModal = ({
 
   const handleConnect = async () => {
     if (!url && !name) {
-      setNameError('Please provide a name');
-      setUrlError('Please provide a valid websocket URL');
       return;
     }
 
     if (!url.startsWith('ws://')) {
-      setUrlError('Please provide a valid websocket URL');
       return;
     }
 
     if (!name) {
-      setNameError('Please provide a name');
       return;
     }
 
     setNameError(null);
-    setUrlError(null);
 
-    try {
-      await CreateAgent.createAgent({ url, name });
-      setUrl('');
-      setName('');
-
-      // Timeout needed to allow the agent to connect before updating the list
-      setTimeout(() => {
-        onAgentUpdate();
-      }, 500);
-
-      onClose();
-    } catch (error) {
-      setUrlError('Error creating agent, make sure the URL is correct');
-    }
+    await createAgent({
+      url,
+      name,
+      onAgentUpdate,
+      onClose
+    });
   };
 
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
-  };
-
-  const handleClose = () => {
-    setNameError(null);
-    setUrlError(null);
-    onClose();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
@@ -108,14 +90,8 @@ export const AddAgentModal = ({
 
   const handleInputChange = (key: string, value: string) => {
     if (key === 'name') {
-      if (nameError) {
-        setNameError(null);
-      }
       setName(value);
     } else if (key === 'url') {
-      if (urlError) {
-        setUrlError(null);
-      }
       setUrl(value);
     }
   };
@@ -154,7 +130,7 @@ export const AddAgentModal = ({
           </div>
         </div>
         <div className="flex justify-end space-x-4 mt-6">
-          <CancelButton onClick={handleClose}>Cancel</CancelButton>
+          <CancelButton onClick={onClose}>Cancel</CancelButton>
           <PrimaryButton onClick={handleConnect}>Connect</PrimaryButton>
         </div>
       </div>

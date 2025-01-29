@@ -2,31 +2,25 @@ import { AgentListItem } from '../agent-list-item/agent-list-item';
 import { PrimaryButton } from '../buttons/Buttons';
 import { useEffect, useState } from 'react';
 import { AddAgentModal } from '../add-agent-modal/add-agent-modal';
-import { GetAgents, TAgent } from '../../api/api';
+import { TAgent } from '../../api/api';
+import { useFetchAgents } from '../../hooks/use-fetch-agents';
 
 export default function LandingPage() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [agents, setAgents] = useState<TAgent[] | null>(null);
   const [agentsUpdated, setAgentsUpdated] = useState<boolean>(false);
 
+  const { error, errorMessage } = useFetchAgents({
+    setAgents,
+    agentsUpdated
+  });
+
+  // Change to logger once available
   useEffect(() => {
-    const fetchAgents = async () => {
-      try {
-        const agents = await GetAgents.getAllAgents();
-        setAgents(agents);
-      } catch (error) {
-        // TODO: Change to logger once available
-        console.error('Error fetching agents:', error);
-      }
-    };
-
-    fetchAgents();
-
-    // Fetch agents every 5 seconds to make sure agent status is up to date
-    const interval = setInterval(fetchAgents, 5000);
-
-    return () => clearInterval(interval);
-  }, [agentsUpdated]);
+    if (error) {
+      console.error(errorMessage);
+    }
+  }, [error, errorMessage]);
 
   return (
     <div className="mt-4 ml-8 w-full mr-8">
