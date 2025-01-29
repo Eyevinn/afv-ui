@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { CreateAgent } from '../../api/api';
 import { CancelButton, PrimaryButton } from '../buttons/Buttons';
 import { Input } from '../input/Input';
 import { useCreateAgent } from '../../hooks/use-create-agent';
