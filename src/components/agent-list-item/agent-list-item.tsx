@@ -9,7 +9,16 @@ type TAgentListItemProps = {
   onAgentsUpdate: () => void;
 };
 
-// TODO: Fix error handling when support in backend exists
+const renderAgentStatusColor = (status: string) => {
+  switch (status) {
+    case 'Connected':
+      return 'text-green-400';
+    case 'Reconnecting':
+      return 'text-amber-400';
+    case 'Disconnected':
+      return 'text-red-400';
+  }
+};
 
 export const AgentListItem = ({
   agent,
@@ -17,16 +26,26 @@ export const AgentListItem = ({
 }: TAgentListItemProps) => {
   const [open, setOpen] = useState<boolean>(true);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleDeleteAgent = async (id: string) => {
     try {
-      await DeleteAgent.createWsConnection({ ids: [id] });
+      await DeleteAgent.deleteAgent({ ids: [id] });
       onAgentsUpdate();
       setIsModalOpen(false);
     } catch (error) {
-      console.error('Error deleting agent:', error);
+      setError(true);
+      setErrorMessage('There was an error when deleting the agent.');
     }
   };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setError(false);
+    setErrorMessage(null);
+  };
+
   return (
     <div className="bg-zinc-800 h-fit text-white cursor-pointer rounded-md py-4 px-8 border-2 border-zinc-600 ">
       <div
@@ -49,9 +68,9 @@ export const AgentListItem = ({
               Connection Status:
             </div>
             <div
-              className={`${
-                agent.status === 'Connected' ? 'text-green-400' : 'text-red-400'
-              } flex-grow text-left min-w-[100px] pl-2`}
+              className={`${renderAgentStatusColor(
+                agent.status
+              )} flex-grow text-left min-w-[100px] pl-2`}
             >
               {agent.status}
             </div>
@@ -64,9 +83,11 @@ export const AgentListItem = ({
       <ConfirmationModal
         isOpen={isModalOpen}
         title="Delete Agent"
-        message={`Are you sure you want to remove the ${agent.name} agent?`}
+        modalText={`Are you sure you want to remove the ${agent.name} agent?`}
         confirmText="Yes, delete agent"
-        onClose={() => setIsModalOpen(false)}
+        error={error}
+        errorMessage={errorMessage}
+        onClose={handleCloseModal}
         onConfirm={() => handleDeleteAgent(agent.id)}
       />
     </div>

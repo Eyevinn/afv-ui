@@ -9,7 +9,6 @@ type AddAgentModalProps = {
   onAgentUpdate: () => void;
 };
 
-// TODO: Fix error handling when support in backend exists
 export const AddAgentModal = ({
   isOpen,
   onClose,
@@ -56,7 +55,7 @@ export const AddAgentModal = ({
     setUrlError(null);
 
     try {
-      await CreateAgent.createWsConnection({ url, name });
+      await CreateAgent.createAgent({ url, name });
       setUrl('');
       setName('');
 
@@ -67,9 +66,7 @@ export const AddAgentModal = ({
 
       onClose();
     } catch (error) {
-      // TODO: Improve when backend available
-      console.error('Error creating agent:', error);
-      setUrlError('Error creating agent: ' + error);
+      setUrlError('Error creating agent, make sure the URL is correct');
     }
   };
 

@@ -15,11 +15,17 @@ export default function LandingPage() {
         const agents = await GetAgents.getAllAgents();
         setAgents(agents);
       } catch (error) {
+        // TODO: Change to logger once available
         console.error('Error fetching agents:', error);
       }
     };
 
     fetchAgents();
+
+    // Fetch agents every 5 seconds to make sure agent status is up to date
+    const interval = setInterval(fetchAgents, 5000);
+
+    return () => clearInterval(interval);
   }, [agentsUpdated]);
 
   return (

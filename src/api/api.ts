@@ -11,8 +11,8 @@ export type TAgent = {
 };
 
 export const CreateAgent = {
-  createWsConnection: async ({ url, name }: { url: string; name: string }) => {
-    handleFetchRequest<TAgent>(
+  createAgent: async ({ url, name }: { url: string; name: string }) =>
+    await handleFetchRequest<TAgent>(
       fetch(`${API_URL}/agents`, {
         method: 'POST',
         headers: {
@@ -24,13 +24,12 @@ export const CreateAgent = {
           name
         })
       })
-    );
-  }
+    )
 };
 
 export const DeleteAgent = {
-  createWsConnection: async ({ ids }: { ids: string[] }) =>
-    handleFetchRequest<TAgent[]>(
+  deleteAgent: async ({ ids }: { ids: string[] }) =>
+    await handleFetchRequest<TAgent[]>(
       fetch(`${API_URL}/agents`, {
         method: 'DELETE',
         headers: {
@@ -46,7 +45,7 @@ export const DeleteAgent = {
 
 export const GetAgents = {
   getAllAgents: async () =>
-    handleFetchRequest<TAgent[]>(
+    await handleFetchRequest<TAgent[]>(
       fetch(`${API_URL}/agents`, {
         method: 'GET',
         headers: {
