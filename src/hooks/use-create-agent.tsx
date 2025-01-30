@@ -14,6 +14,13 @@ export const useCreateAgent = () => {
   const [urlError, setUrlError] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
 
+  const resetModal = () => {
+    setUrl('');
+    setName('');
+    setUrlError(null);
+    setNameError(null);
+  };
+
   const createAgent = async ({
     url,
     name,
@@ -31,10 +38,7 @@ export const useCreateAgent = () => {
 
     try {
       await CreateAgent.createAgent({ url, name });
-      setUrl('');
-      setName('');
-      setUrlError(null);
-      setNameError(null);
+      resetModal();
 
       setTimeout(() => {
         onAgentUpdate();
@@ -46,5 +50,14 @@ export const useCreateAgent = () => {
     }
   };
 
-  return { url, name, urlError, nameError, setUrl, setName, createAgent };
+  return {
+    url,
+    name,
+    urlError,
+    nameError,
+    setUrl,
+    setName,
+    createAgent,
+    resetModal
+  };
 };
