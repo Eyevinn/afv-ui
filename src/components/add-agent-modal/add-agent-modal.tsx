@@ -17,7 +17,7 @@ export const AddAgentModal = ({
   const [nameError, setNameError] = useState<string | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const { url, name, urlError, setUrl, setName, createAgent } =
+  const { url, name, urlError, setUrl, setName, createAgent, resetModal } =
     useCreateAgent();
 
   const setInputRef = (index: number, el: HTMLInputElement | null) => {
@@ -59,7 +59,7 @@ export const AddAgentModal = ({
 
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      onClose();
+      handleClose();
     }
   };
 
@@ -93,6 +93,11 @@ export const AddAgentModal = ({
     } else if (key === 'url') {
       setUrl(value);
     }
+  };
+
+  const handleClose = () => {
+    resetModal();
+    onClose();
   };
 
   return (
@@ -129,7 +134,7 @@ export const AddAgentModal = ({
           </div>
         </div>
         <div className="flex justify-end space-x-4 mt-6">
-          <CancelButton onClick={onClose}>Cancel</CancelButton>
+          <CancelButton onClick={handleClose}>Cancel</CancelButton>
           <PrimaryButton onClick={handleConnect}>Connect</PrimaryButton>
         </div>
       </div>
