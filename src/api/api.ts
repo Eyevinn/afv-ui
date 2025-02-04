@@ -1,6 +1,7 @@
 import { handleFetchRequest } from './handle-fetch-request';
 
-const API_URL = 'https://eyevinnlab-afvbackend.eyevinn-web-runner.auto.prod.osaas.io';
+const API_URL =
+  'https://eyevinnlab-afvbackend.eyevinn-web-runner.auto.prod.osaas.io';
 const API_KEY = process.env.REACT_APP_API_KEY;
 
 export type TAgent = {
