@@ -19,7 +19,6 @@ export default function LandingPage() {
   useEffect(() => {
     if (error) {
       console.error(errorMessage);
-      console.log('test');
     }
   }, [error, errorMessage]);
 
