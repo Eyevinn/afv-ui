@@ -25,8 +25,15 @@ export const useCreateAgent = () => {
     onAgentUpdate,
     handleCloseModal
   }: TCreateAgentProps) => {
-    setLoading(true);
     try {
+      if (!url.length) {
+        toast.error('Url cannot be empty');
+        return;
+      } else if (!name.length) {
+        toast.error('Name cannot be empty');
+        return;
+      }
+      setLoading(true);
       await CreateAgent.createAgent({ url, name, options });
 
       setTimeout(() => {

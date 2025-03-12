@@ -41,7 +41,10 @@ export const CreateAgent = {
     ).catch((error) => {
       if (error.message.includes('Invalid')) {
         throw new Error('Not a valid URL');
-      } else if (error.message.includes('already in use')) {
+      } else if (
+        error.message.includes('already in use') ||
+        error.message.includes('Failed to connect')
+      ) {
         throw new Error(error.message);
       } else {
         throw new Error('There was an error creating the agent');
