@@ -1,9 +1,9 @@
-import { AgentListItem } from '../agent-list-item/agent-list-item';
-import { PrimaryButton } from '../buttons/Buttons';
 import { useEffect, useState } from 'react';
-import { AddAgentModal } from '../add-agent-modal/add-agent-modal';
 import { TAgent } from '../../api/api';
 import { useFetchAgents } from '../../hooks/use-fetch-agents';
+import { AddAgentModal } from '../add-agent-modal/add-agent-modal';
+import { AgentListItem } from '../agent-list-item/agent-list-item';
+import { PrimaryButton } from '../buttons/Buttons';
 
 export default function LandingPage() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);

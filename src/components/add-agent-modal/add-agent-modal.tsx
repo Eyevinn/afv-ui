@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { useCreateAgent } from '../../hooks/use-create-agent';
 import { CancelButton, PrimaryButton } from '../buttons/Buttons';
 import { Input } from '../input/Input';
-import { useCreateAgent } from '../../hooks/use-create-agent';
+import Loader from '../loader/Loader';
 
 type AddAgentModalProps = {
   isOpen: boolean;
@@ -14,11 +15,11 @@ export const AddAgentModal = ({
   onClose,
   onAgentUpdate
 }: AddAgentModalProps) => {
-  const [nameError, setNameError] = useState<string | null>(null);
+  const [fadeIn, setFadeIn] = useState<number | ''>('');
+  const [fadeOut, setFadeOut] = useState<number | ''>('');
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const { url, name, urlError, setUrl, setName, createAgent, resetModal } =
-    useCreateAgent();
+  const { url, name, loading, setUrl, setName, createAgent } = useCreateAgent();
 
   const setInputRef = (index: number, el: HTMLInputElement | null) => {
     inputRefs.current[index] = el;
@@ -35,31 +36,29 @@ export const AddAgentModal = ({
   }
 
   const handleConnect = async () => {
-    if (!url && !name) {
-      return;
-    }
-
-    if (!url.startsWith('ws://')) {
-      return;
-    }
-
-    if (!name) {
-      return;
-    }
-
-    setNameError(null);
-
     await createAgent({
       url,
       name,
+      options: {
+        fadeIn: fadeIn ? Number(fadeIn) : undefined,
+        fadeOut: fadeOut ? Number(fadeOut) : undefined
+      },
       onAgentUpdate,
-      onClose
+      handleCloseModal
     });
+  };
+
+  const handleCloseModal = () => {
+    onClose();
+    setName('');
+    setUrl('');
+    setFadeIn('');
+    setFadeOut('');
   };
 
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      handleClose();
+      handleCloseModal();
     }
   };
 
@@ -92,12 +91,11 @@ export const AddAgentModal = ({
       setName(value);
     } else if (key === 'url') {
       setUrl(value);
+    } else if (key === 'fadeIn') {
+      setFadeIn(Number(value));
+    } else if (key === 'fadeOut') {
+      setFadeOut(Number(value));
     }
-  };
-
-  const handleClose = () => {
-    resetModal();
-    onClose();
   };
 
   return (
@@ -111,31 +109,53 @@ export const AddAgentModal = ({
           <div className="flex flex-col space-y-2">
             <h3 className="text-white">Name</h3>
             <Input
+              type="text"
               value={name}
               onChange={(e) => handleInputChange('name', e.target.value)}
               placeholder="e.g. production name"
-              error={!!nameError}
               ref={(el) => setInputRef(0, el)}
               onKeyDown={(e) => handleKeyDown(e, 0)}
             />
-            {nameError && <p className="text-red-500 text-sm">{nameError}</p>}
           </div>
           <div className="flex flex-col space-y-2">
             <h3 className="text-white">WebSocket URL</h3>
             <Input
+              type="text"
               value={url}
               onChange={(e) => handleInputChange('url', e.target.value)}
               placeholder="URL starting with ws://"
-              error={!!urlError}
               ref={(el) => setInputRef(1, el)}
               onKeyDown={(e) => handleKeyDown(e, 1)}
             />
-            {urlError && <p className="text-red-500 text-sm">{urlError}</p>}
+          </div>
+          <div className="flex flex-col space-y-2">
+            <h3 className="text-white">Fade In Value (ms)</h3>
+            <Input
+              type="number"
+              value={fadeIn}
+              onChange={(e) => handleInputChange('fadeIn', e.target.value)}
+              placeholder="Enter fade in value"
+              ref={(el) => setInputRef(2, el)}
+              onKeyDown={(e) => handleKeyDown(e, 2)}
+            />
+          </div>
+          <div className="flex flex-col space-y-2">
+            <h3 className="text-white">Fade Out Value (ms)</h3>
+            <Input
+              type="number"
+              value={fadeOut}
+              onChange={(e) => setFadeOut(Number(e.target.value))}
+              placeholder="Enter fade out value"
+              ref={(el) => setInputRef(3, el)}
+              onKeyDown={(e) => handleKeyDown(e, 3)}
+            />
           </div>
         </div>
         <div className="flex justify-end space-x-4 mt-6">
-          <CancelButton onClick={handleClose}>Cancel</CancelButton>
-          <PrimaryButton onClick={handleConnect}>Connect</PrimaryButton>
+          <CancelButton onClick={handleCloseModal}>Cancel</CancelButton>
+          <PrimaryButton onClick={handleConnect}>
+            {loading ? <Loader /> : 'Connect'}
+          </PrimaryButton>
         </div>
       </div>
     </div>

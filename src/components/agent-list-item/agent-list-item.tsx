@@ -1,8 +1,11 @@
+import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { useState } from 'react';
-import { TAgent, DeleteAgent } from '../../api/api';
-import { IconChevronUp, IconChevronDown } from '@tabler/icons-react';
+import { TAgent } from '../../api/api';
+import { useDeleteAgent } from '../../hooks/use-delete-agent';
+import { useUpdateAgent } from '../../hooks/use-update-agent';
 import { DeleteIconButton } from '../buttons/Buttons';
 import { ConfirmationModal } from '../confirmation-modal/confirmation-modal';
+import { SettingsAccordion } from '../settings-accordion/SettingsAccordion';
 
 type TAgentListItemProps = {
   agent: TAgent;
@@ -28,16 +31,28 @@ export const AgentListItem = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState<boolean>(true);
+  const [fadeValues, setFadeValues] = useState({
+    fadeIn: agent.options?.fadeIn || 0,
+    fadeOut: agent.options?.fadeOut || 0
+  });
+
+  const { saveLoading, updateAgent } = useUpdateAgent();
+  const { deleteLoading, deleteAgent } = useDeleteAgent();
+
+  const handleSave = async () => {
+    await updateAgent({
+      id: agent.id,
+      options: {
+        fadeIn: fadeValues.fadeIn,
+        fadeOut: fadeValues.fadeOut
+      }
+    });
+  };
 
   const handleDeleteAgent = async (id: string) => {
-    try {
-      await DeleteAgent.deleteAgent({ ids: [id] });
-      onAgentsUpdate();
-      setIsModalOpen(false);
-    } catch (error) {
-      setError(true);
-      setErrorMessage('There was an error when deleting the agent.');
-    }
+    await deleteAgent({ ids: [id] });
+    onAgentsUpdate();
   };
 
   const handleCloseModal = () => {
@@ -47,15 +62,21 @@ export const AgentListItem = ({
   };
 
   return (
-    <div className="bg-zinc-800 h-fit text-white cursor-pointer rounded-md py-4 px-8 border-2 border-zinc-600 ">
+    <div className="bg-zinc-800 h-fit text-white cursor-pointer rounded-md py-4 px-8 border-2 border-zinc-600">
       <div
         className="flex flex-row justify-between text-xl w-full"
         onClick={() => setOpen(!open)}
       >
-        {agent.name}
+        {agent.name || agent.url}
         {open ? <IconChevronUp /> : <IconChevronDown />}
       </div>
-      {open && (
+
+      {/* Accordion Content with Smooth Transition */}
+      <div
+        className={`transition-all duration-300 ease-in-out overflow-hidden ${
+          open ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
         <div className="mt-4 text-sm flex flex-col gap-2">
           <div className="flex items-start">
             <div className="w-1/2 text-left font-semibold whitespace-nowrap">
@@ -75,17 +96,32 @@ export const AgentListItem = ({
               {agent.status}
             </div>
           </div>
-          <div className="self-end">
+
+          {/* Settings Accordion */}
+          <SettingsAccordion
+            settingsOpen={settingsOpen}
+            loading={saveLoading}
+            previousOptions={agent.options}
+            fadeValues={fadeValues}
+            setSettingsOpen={setSettingsOpen}
+            handleSave={handleSave}
+            setFadeValues={setFadeValues}
+          />
+
+          <div className="self-end mt-4">
             <DeleteIconButton onClick={() => setIsModalOpen(true)} />
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Confirmation Modal */}
       <ConfirmationModal
         isOpen={isModalOpen}
         title="Delete Agent"
         modalText={`Are you sure you want to remove the ${agent.name} agent?`}
         confirmText="Yes, delete agent"
         error={error}
+        loading={deleteLoading}
         errorMessage={errorMessage}
         onClose={handleCloseModal}
         onConfirm={() => handleDeleteAgent(agent.id)}

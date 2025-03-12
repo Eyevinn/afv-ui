@@ -22,8 +22,12 @@ export const handleFetchRequest = async <T>(
       throw new Error(text);
     }
 
-    if (json && 'message' in json) {
-      throw new Error(json.message);
+    if (json) {
+      if ('message' in json) {
+        throw new Error(json.message);
+      } else if ('error' in json) {
+        throw new Error(json.error);
+      }
     }
 
     throw new Error(
