@@ -2,6 +2,7 @@ import { IconTrash } from '@tabler/icons-react';
 
 type TButtonProps = {
   onClick: () => void;
+  isDisabled?: boolean;
   children?: React.ReactNode;
 };
 
@@ -16,10 +17,14 @@ export const CancelButton = ({ onClick, children }: TButtonProps) => {
   );
 };
 
-export const PrimaryButton = ({ onClick, children }: TButtonProps) => {
+export const PrimaryButton = ({
+  onClick,
+  isDisabled,
+  children
+}: TButtonProps) => {
   return (
     <button
-      className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded h-fit w-fit"
+      className={`${isDisabled ? 'bg-green-600/50 pointer-events-none' : 'bg-green-600 hover:bg-green-700'} text-white font-bold py-2 px-4 rounded h-fit w-fit`}
       onClick={onClick}
     >
       {children}
