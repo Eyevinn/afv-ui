@@ -1,5 +1,5 @@
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TAgent } from '../../api/api';
 import { useDeleteAgent } from '../../hooks/use-delete-agent';
 import { useUpdateAgent } from '../../hooks/use-update-agent';
@@ -32,10 +32,22 @@ export const AgentListItem = ({
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [settingsOpen, setSettingsOpen] = useState<boolean>(true);
+  const [isScreenSmall, setIsScreenSmall] = useState<boolean>(false);
   const [fadeValues, setFadeValues] = useState({
     fadeIn: agent.options?.fadeIn || 0,
     fadeOut: agent.options?.fadeOut || 0
   });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsScreenSmall(window.innerWidth <= 1550);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const { saveLoading, updateAgent } = useUpdateAgent();
   const { deleteLoading, deleteAgent } = useDeleteAgent();
@@ -78,11 +90,17 @@ export const AgentListItem = ({
         }`}
       >
         <div className="mt-4 text-sm flex flex-col gap-2">
-          <div className="flex items-start">
-            <div className="w-1/2 text-left font-semibold whitespace-nowrap">
+          <div
+            className={`flex items-start ${isScreenSmall ? 'space-x-12' : ''}`}
+          >
+            <div
+              className={`${isScreenSmall ? '' : 'w-1/2'} text-left font-semibold whitespace-nowrap`}
+            >
               URL:
             </div>
-            <div className="w-1/2 text-left">{agent.url}</div>
+            <div className={`${isScreenSmall ? '' : 'w-1/2'} text-left`}>
+              {agent.url}
+            </div>
           </div>
           <div className="flex items-start">
             <div className="w-1/2 text-left font-semibold whitespace-nowrap">
