@@ -40,8 +40,8 @@ export const AddAgentModal = ({
       url,
       name,
       options: {
-        fadeIn: fadeIn ? Number(fadeIn) : undefined,
-        fadeOut: fadeOut ? Number(fadeOut) : undefined
+        fadeIn: typeof fadeIn === 'number' ? fadeIn : undefined,
+        fadeOut: typeof fadeOut === 'number' ? fadeOut : undefined
       },
       onAgentUpdate,
       handleCloseModal
