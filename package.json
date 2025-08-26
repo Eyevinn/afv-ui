@@ -64,7 +64,8 @@
     "start": "serve -s build",
     "lint": "eslint ./src --report-unused-disable-directives --max-warnings 0",
     "pretty": "prettier --write --ignore-unknown .",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "postversion": "git push && git push --tags"
   },
   "eslintConfig": {
     "extends": [
